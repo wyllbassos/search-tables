@@ -1,5 +1,4 @@
-[
-    {
+[{
         "nome": "produtos",
         "campos": [
             "Codigo",
