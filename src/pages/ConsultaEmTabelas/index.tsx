@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
-//import InputGroup from './components/inputgroup';
+
+import logo from '../../assets/logo.png';
 import Tbody from './components/tbody';
 import Thead from './components/thead';
-import './styles.css';
 import {
-  Navbar,
-  Nav,
-  Form,
-  FormControl,
-  Button,
-  NavDropdown,
-  Tabs,
-  Tab,
-  NavbarBrand,
-  NavItem,
+  Header,
+  HeaderButton,
   InputGroup,
-} from 'react-bootstrap';
-import UserDropDown from './components/userDropdown';
-import { Header, HeaderButton } from './../styles';
+  MainContainer,
+  Section,
+  Footer,
+} from './styles';
 
 interface tabela {
   NOME: string;
@@ -70,7 +63,6 @@ class ClassObjetoGlobal {
   private infoTabelas: ObjClassInfoTabela = {}; // = new Array<listaTabelasProps>();
 
   private aplicaFiltro() {
-    console.log(this.getTabelaAtiva.listaFiltros);
     this.getTabelaAtiva.numRegistrosFiltrados = 0;
     this.getTabelaAtiva.itens.map((element) => {
       element.__ativo = true;
@@ -245,8 +237,9 @@ let infoTabelas = new ClassObjetoGlobal();
 //----------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------
-document.body.style.backgroundColor = '#343a40';
-function PaginaInicial() {
+// document.body.style.backgroundColor = '#343a40';
+
+const ConsultaEmTabelas: React.FC = () => {
   //const [infoTabelas, setInfoTabelas] = useState(new ClassObjetoGlobal())
   const [tabelaAtual, setTabelaAtual] = useState('');
   const [limiteAtual, setLimiteAtual] = useState(10);
@@ -260,6 +253,7 @@ function PaginaInicial() {
   useEffect(() => {
     infoTabelas = Object.assign(infoTabelas, initInfoTabelas());
     setDadosFiltroAtual();
+    setCampoAtual('QUALQUER');
   }, []);
   //----------------------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------------------
@@ -361,25 +355,8 @@ function PaginaInicial() {
 
     return (
       <>
-        {/* <Tabs
-          className="bg-green"
-          defaultActiveKey={tabelaAtual}
-          id="tab-ListaTabelas"
-          onSelect={setFiltroTabela}
-          transition={false}
-        >
-          <Tab title="Consultas PCM" disabled />
-          {listaTabelas.map((nTab, i) => (
-            <Tab key={i} eventKey={nTab} title={nTab} />
-          ))}
-          <Tab
-            title={`${
-              totalFilReg > limiteAtual ? limiteAtual : totalFilReg
-            } de ${totalFilReg}`}
-            disabled
-          />
-        </Tabs> */}
         <Header>
+          <img src={logo} alt="logo" />
           <span>Consultas PCM</span>
           {listaTabelas.map((nTab, i) => (
             <HeaderButton
@@ -391,95 +368,99 @@ function PaginaInicial() {
             >
               <span>{nTab}</span>
             </HeaderButton>
-            // <Tab key={i} eventKey={nTab} title={nTab} />
           ))}
           <span>{`${
             totalFilReg > limiteAtual ? limiteAtual : totalFilReg
           } de ${totalFilReg}`}</span>
         </Header>
-        <Navbar
-          className="bg-green"
-          variant="dark"
-          collapseOnSelect
-          expand="lg"
-        >
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="mr-auto">
-              <UserDropDown
-                fOnSelect={alert}
-                id={'dropdown-Lista-Filtros'}
-                title="Lista De Filtros"
-                itens={listaFiltroSTR}
-                itemAtivo={''}
-              />
-              <UserDropDown
-                fOnSelect={setFiltroLimite}
-                id={'dropdown-Limite'}
-                title={String('Mostrar ' + limiteAtual)}
-                itens={listaLimite}
-                itemAtivo={limiteAtual}
-              />
-              <UserDropDown
-                fOnSelect={setFiltroCampo}
-                id={'dropdown-Campo'}
-                title={'FILTRAR COLUNA: ' + campoAtual}
-                itens={[...listaCampos, 'QUALQUER']}
-                itemAtivo={campoAtual}
-              />
-              <UserDropDown
-                fOnSelect={setFiltroCondicao}
-                id={'dropdown-Condicao'}
-                title={condicaoAtual}
-                itens={listaCondicao}
-                itemAtivo={condicaoAtual}
-              />
-              <NavDropdown id="dropdown-Teste" title={'teste'}>
-                {listaCampos.map((e, i) => (
-                  <NavDropdown.ItemText key={i} className="active">
-                    <Form.Check type="checkbox" id={`check-api-${e}`}>
-                      <Form.Check.Input type="checkbox" isValid />
-                      <Form.Check.Label>{e}</Form.Check.Label>
-                    </Form.Check>
-                  </NavDropdown.ItemText>
-                ))}
-              </NavDropdown>
-              <NavItem></NavItem>
-            </Nav>
-          </Navbar.Collapse>
-          <Form inline>
-            <InputGroup>
-              <FormControl
-                placeholder={`Busca em ${tabelaAtual}`}
-                aria-label={`${campoAtual} ${condicaoAtual}`}
-                aria-describedby="basic-addon2"
-                onChange={(e) => {
-                  setFiltroTexto(e.target.value.toUpperCase());
-                }}
-                value={textoAtual}
-              />
-              <InputGroup.Append>
-                <Button variant="primary" onClick={salvaFiltro}>
-                  Aplicar
-                </Button>
-                <Button variant="danger" onClick={limparFiltros}>
-                  Limpar
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
-          </Form>
-        </Navbar>
-        <main>
+        <Section>
+          <InputGroup>
+            <span className="borders-left">Filtrar</span>
+            <select
+              value={campoAtual}
+              onChange={({ target }) => {
+                setFiltroCampo(target.value);
+              }}
+            >
+              {['QUALQUER', ...listaCampos].map((campo) => (
+                <option key={campo} value={campo}>
+                  {campo}
+                </option>
+              ))}
+            </select>
+            <select
+              value={condicaoAtual}
+              onChange={({ target }) => {
+                setFiltroCondicao(target.value.toUpperCase());
+              }}
+            >
+              {listaCondicao.map((condicao) => (
+                <option key={condicao} value={condicao}>
+                  {condicao}
+                </option>
+              ))}
+            </select>
+            <input
+              value={textoAtual}
+              onChange={({ target }) => {
+                setFiltroTexto(target.value);
+              }}
+              type="text"
+            />
+            <button type="button" onClick={salvaFiltro}>
+              Salvar Filtro
+            </button>
+            <button
+              type="button"
+              onClick={limparFiltros}
+              className="red borders-right"
+            >
+              Limpar Filtros
+            </button>
+          </InputGroup>
+        </Section>
+
+        <MainContainer>
           <table id="listaRegistros" className="table table-dark table-striped">
             <Thead listaCampos={listaCampos} />
             <Tbody itens={locArrFill} listaCampos={listaCampos} />
           </table>
-        </main>
+        </MainContainer>
+
+        <Footer>
+          <InputGroup>
+            <select
+              className="borders-left"
+              value={limiteAtual}
+              onChange={({ target }) => {
+                setFiltroLimite(Number(target.value));
+              }}
+            >
+              {listaLimite.map((limite) => (
+                <option key={limite} value={limite}>
+                  {limite}
+                </option>
+              ))}
+            </select>
+            <select
+              className="borders-right"
+              onChange={({ target }) => {
+                alert(target.value);
+              }}
+            >
+              {listaFiltroSTR.map((filtro) => (
+                <option key={filtro} value={filtro}>
+                  {filtro}
+                </option>
+              ))}
+            </select>
+          </InputGroup>
+        </Footer>
       </>
     );
   } else {
     return <div>Carregando...</div>;
   }
-}
+};
 
-export default PaginaInicial;
+export default ConsultaEmTabelas;

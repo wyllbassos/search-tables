@@ -5,6 +5,7 @@
     --gray2: #95999c;
     --green: rgb(2, 170, 77);
     --black: #000;
+    --red: #dc3545;
 }
 
 @media (max-width: 1080px) {
