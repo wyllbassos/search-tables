@@ -111,7 +111,7 @@ export const InputGroup = styled.div`
 
 export const MainContainer = styled.main`
   position: relative;
-  height: calc(100vh - 160px);
+  height: calc(100vh - 10rem);
   width: 100vw;
   overflow: auto;
 `;

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import logo from '../../assets/logo.png';
-import Tbody from './components/tbody';
-import Thead from './components/thead';
+import Table from './components/Table/index';
 import {
   Header,
   HeaderButton,
@@ -253,7 +252,6 @@ const ConsultaEmTabelas: React.FC = () => {
   useEffect(() => {
     infoTabelas = Object.assign(infoTabelas, initInfoTabelas());
     setDadosFiltroAtual();
-    setCampoAtual('QUALQUER');
   }, []);
   //----------------------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------------------
@@ -373,6 +371,7 @@ const ConsultaEmTabelas: React.FC = () => {
             totalFilReg > limiteAtual ? limiteAtual : totalFilReg
           } de ${totalFilReg}`}</span>
         </Header>
+
         <Section>
           <InputGroup>
             <span className="borders-left">Filtrar</span>
@@ -421,10 +420,7 @@ const ConsultaEmTabelas: React.FC = () => {
         </Section>
 
         <MainContainer>
-          <table id="listaRegistros" className="table table-dark table-striped">
-            <Thead listaCampos={listaCampos} />
-            <Tbody itens={locArrFill} listaCampos={listaCampos} />
-          </table>
+          <Table itens={locArrFill} listaCampos={listaCampos} />
         </MainContainer>
 
         <Footer>
