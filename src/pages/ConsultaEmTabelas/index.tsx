@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import logo from '../../assets/logo.png';
 import Table from './components/Table/index';
+import { useTabelas } from './hooks/tabelas';
 import {
   Header,
   HeaderButton,
@@ -247,6 +248,9 @@ const ConsultaEmTabelas: React.FC = () => {
   const [textoAtual, setTextoAtual] = useState('');
   const [listaFiltroSTR, setListaFiltroSTR] = useState(new Array<string>());
   //const [filtroAtual, setFiltroAtual] = useState(new ClassFiltroProps());
+
+  const { tabelas, produtos, bens, indexTabelaAtual, handleChangeTable } = useTabelas();
+
   //----------------------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------------------
   useEffect(() => {
@@ -351,20 +355,23 @@ const ConsultaEmTabelas: React.FC = () => {
     });
     locArrFill = locArrFill.slice(0, limiteAtual);
 
+    console.log(tabelas[indexTabelaAtual])
+
     return (
       <>
         <Header>
           <img src={logo} alt="logo" />
           <span>Consultas PCM</span>
-          {listaTabelas.map((nTab, i) => (
+          {tabelas.map((nTab, i) => (
             <HeaderButton
-              selected={tabelaAtual === nTab}
+              selected={tabelaAtual === nTab.NOME}
               onClick={() => {
-                setFiltroTabela(nTab);
+                handleChangeTable(i);
+                setFiltroTabela(nTab.NOME);
               }}
               key={String(i)}
             >
-              <span>{nTab}</span>
+              <span>{nTab.NOME}</span>
             </HeaderButton>
           ))}
           <span>{`${
@@ -381,7 +388,7 @@ const ConsultaEmTabelas: React.FC = () => {
                 setFiltroCampo(target.value);
               }}
             >
-              {['QUALQUER', ...listaCampos].map((campo) => (
+              {['QUALQUER', ...tabelas[indexTabelaAtual].CAMPOS].map((campo) => (
                 <option key={campo} value={campo}>
                   {campo}
                 </option>
